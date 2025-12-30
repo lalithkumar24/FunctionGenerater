@@ -10,8 +10,11 @@ add_executable(Function_Generater
         main.cpp
         lib/tinyexpr.cpp
         lib/tinyexpr.h
-        main.h
         defs.h
+        display.cpp
+        display.h
+        functionGenerater.h
+        functionGenerater.cpp
 )
 
 target_link_libraries(Function_Generater PRIVATE SDL2::SDL2)
