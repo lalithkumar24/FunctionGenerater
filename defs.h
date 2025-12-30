@@ -14,5 +14,6 @@ constexpr int CENTER_X = 640;
 constexpr int CENTER_Y = 360;
 constexpr double SCALE = 20.0;
 constexpr int TICK_SIZE = 10;
+const int start = 0;
 
 #endif

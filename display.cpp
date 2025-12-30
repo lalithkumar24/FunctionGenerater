@@ -77,33 +77,16 @@ void Display::presentScreen() {
 void Display::graphLines() {
     SDL_SetRenderDrawColor(renderer,255,255,255,SDL_ALPHA_OPAQUE);
 
-    SDL_RenderDrawLine(renderer, centerX, 0, centerX, SCREEN_HEIGHT);
-    SDL_RenderDrawLine(renderer, 0, centerY, SCREEN_WIDTH, centerY);
+    SDL_RenderDrawLine(renderer, CENTER_X, start, CENTER_X, SCREEN_HEIGHT);
+    SDL_RenderDrawLine(renderer, start, CENTER_Y, SCREEN_WIDTH, CENTER_Y);
 
 
-    for (double i = scale; i < SCREEN_WIDTH / 2; i += scale) {
-        SDL_RenderDrawLine(renderer,
-            centerX + static_cast<int>(i),
-            centerY - tickSize / 2,
-            centerX + static_cast<int>(i),
-            centerY + tickSize / 2);
-        SDL_RenderDrawLine(renderer,
-            centerX + static_cast<int>(i),
-            centerY - tickSize / 2,
-            centerX + static_cast<int>(i),
-            centerY + tickSize / 2);
+    for (double i = scale; i < 640; i += scale) {
+        SDL_RenderDrawLine(renderer, centerX + static_cast<int>(i), centerY - tickSize/2, centerX + static_cast<int>(i), centerY + tickSize/2);
+        SDL_RenderDrawLine(renderer, centerX - static_cast<int>(i), centerY - tickSize/2, centerX - static_cast<int>(i), centerY + tickSize/2);
     }
     for (double i = scale; i < SCREEN_HEIGHT / 2; i += scale) {
-        SDL_RenderDrawLine(renderer,
-            centerX - tickSize / 2,
-            centerY + static_cast<int>(i),
-            centerX + tickSize / 2,
-            centerY + static_cast<int>(i));
-        SDL_RenderDrawLine(renderer,
-            centerX - tickSize / 2,
-            centerY - static_cast<int>(i),
-            centerX + tickSize / 2,
-            centerY + static_cast<int>(i)
-            );
+        SDL_RenderDrawLine(renderer, centerX - tickSize/2, centerY + static_cast<int>(i), centerX + tickSize/2, centerY + static_cast<int>(i));
+        SDL_RenderDrawLine(renderer, centerX - tickSize/2, centerY - static_cast<int>(i), centerX + tickSize/2, centerY - static_cast<int>(i));
     }
 }

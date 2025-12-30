@@ -21,7 +21,6 @@ struct Equation {
     std::string equation;
     Mode mode;
     SDL_Color color;
-
     Equation(const std::string& equation, Mode mode, SDL_Color color = {255, 0, 0, 255})
         : equation(equation), mode(mode), color(color) {}
 };
@@ -33,7 +32,7 @@ private:
     bool running;
 
     std::tuple<Mode, std::string> parseInput(std::string inputEquation);
-    void generateWave(const Equation& eq);
+    void generateWave(const Equation& eq) const;
 
 public:
     explicit FunctionGenerator(Display& display);

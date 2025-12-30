@@ -4,6 +4,7 @@
 
 #include "functionGenerater.h"
 #include "lib/tinyexpr.h"
+#include "defs.h"
 
 FunctionGenerator::FunctionGenerator(Display& disp)
     : display(disp), running(true) {
@@ -19,10 +20,10 @@ std::tuple<Mode, std::string> FunctionGenerator::parseInput(std::string inputEqu
         return {currentMode,""};
     }
 
-    if (inputEquation[0] == 'y' || inputEquation[0] == 'Y' || inputEquation[1] == '=') {
+    if ((inputEquation[0] == 'y' || inputEquation[0] == 'Y') && inputEquation[1] == '=') {
         currentMode = Y_EQUATION;
         parsedEquation = inputEquation.substr(2);
-    }else if (inputEquation[0] == 'x' || inputEquation[0] == 'X' || inputEquation[1] == '=') {
+    }else if ((inputEquation[0] == 'x' || inputEquation[0] == 'X') && inputEquation[1] == '=') {
         currentMode = X_EQUATION;
         parsedEquation = inputEquation.substr(2);
     }else {
@@ -33,7 +34,7 @@ std::tuple<Mode, std::string> FunctionGenerator::parseInput(std::string inputEqu
     return {currentMode,parsedEquation};
 }
 
-void FunctionGenerator::generateWave(const Equation& eq) {
+void FunctionGenerator::generateWave(const Equation& eq) const {
     double mathX{0},mathY{0};
 
     SDL_Renderer* renderer = display.getRenderer();
@@ -41,7 +42,6 @@ void FunctionGenerator::generateWave(const Equation& eq) {
 
     te_parser parser;
     parser.set_variables_and_functions({{"x",&mathX}, {"y",&mathY}});
-    std::cout<<eq.equation<<"\n";
     if (eq.mode == Y_EQUATION) {
         int prevScreenX = 0;
         int prevScreenY =  CENTER_Y;
@@ -49,13 +49,8 @@ void FunctionGenerator::generateWave(const Equation& eq) {
         for (int screenX = 0; screenX < SCREEN_WIDTH; screenX++) {
             mathX = (screenX - CENTER_X)/SCALE;
             mathY = parser.evaluate(eq.equation);
-
-
-            int screenY = CENTER_Y - static_cast<int>(mathX*SCALE);
-
-
-//             std::cout<<screenX<<" "<<screenY<<std::endl;
-
+            std::cout<<mathX<<" "<<mathY<<std::endl;
+            int screenY = CENTER_Y - static_cast<int>(mathY*SCALE);
             if (!firstpoint) {
                 SDL_RenderDrawLine(renderer, prevScreenX, prevScreenY, screenX, screenY);
             }
@@ -71,10 +66,7 @@ void FunctionGenerator::generateWave(const Equation& eq) {
             mathY = (screenY - CENTER_Y)/SCALE;
             mathX = parser.evaluate(eq.equation);
 
-            // std::cout<<mathX<<" "<<mathY<<std::endl;
-
-            int screenX = CENTER_X - static_cast<int>(mathX*SCALE);
-
+            int screenX = CENTER_X - static_cast<int>(mathY*SCALE);
 
             if (!firstpoint) {
                 SDL_RenderDrawLine(renderer, prevScreenX, screenY, screenX, screenY);
@@ -121,15 +113,12 @@ void FunctionGenerator::run() {
                 running = false;
             }
         }
-
         display.prepareScreen();
         display.graphLines();
-
-
         for (const auto& equation : equations) {
             generateWave(equation);
         }
-        display.prepareScreen();
+        display.presentScreen();
         SDL_Delay(16);
     }
 }
